@@ -1,0 +1,77 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    MIGRAÇÃO: esse projeto era .NET 8 (Microsoft.NET.Sdk.Web) e virou
+    .NET Framework 4.8 (Microsoft.NET.Sdk "puro", auto-hospedado via OWIN).
+
+    Por quê: o SDK do Crystal Reports (CrystalDecisions.*.dll) só existe para
+    .NET Framework clássico — não tem versão para .NET Core/.NET 5+/.NET 8, e
+    a SAP não tem plano de lançar uma. Então a API precisa rodar em .NET
+    Framework para conseguir referenciar essas DLLs.
+
+    Também trocamos de "ASP.NET Core" (Microsoft.NET.Sdk.Web, com
+    Program.cs minimal hosting) para "ASP.NET Web API 2 auto-hospedado via
+    OWIN" — é o jeito de ter um Web API em .NET Framework SEM precisar do
+    IIS/System.Web completo (que não existiria de outra forma sem Visual
+    Studio + IIS Express instalados). Roda como um .exe de console mesmo.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>CrystalReportsRptApi</RootNamespace>
+    <AssemblyName>ConsultaRPT</AssemblyName>
+    <!-- As DLLs do Crystal referenciadas abaixo sao de 64 bits (win64_x64),
+         entao o .exe precisa ser 64 bits tambem. Sem isto, o SDK gera x86. -->
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AppConfig>App.config</AppConfig>
+    <!-- Ícone do ConsultaRPT.exe (aparece no Explorer, nos atalhos e na barra de tarefas). -->
+    <ApplicationIcon>ConsultaRPT.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.OwinSelfHost" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Owin.Cors" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="4.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <!--
+    Bibliotecas do próprio .NET Framework que não vêm referenciadas por
+    padrão (diferente do .NET 8) e precisam ser adicionadas manualmente.
+    System.Configuration: usada pelo ConfigurationManager em
+    Services/CrystalReportsRptService.cs, para ler o App.config.
+  -->
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <!--
+    SDK do Crystal Reports — localizado no seu PC via PowerShell
+    (Get-ChildItem ... -Filter "CrystalDecisions.*.dll" -Recurse) e
+    referenciado pelo caminho de instalação (mais estável que apontar
+    para a GAC, cujo nome de pasta muda a cada atualização de versão).
+  -->
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine">
+      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win64_x64\dotnet\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared">
+      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win64_x64\dotnet\CrystalDecisions.Shared.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!--
+    A tela (React) compilada fica em wwwroot (gerada pelo publicar.bat) e é
+    copiada junto com o .exe, para a API conseguir servi-la.
+  -->
+  <ItemGroup>
+    <None Include="wwwroot\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+/* Liga o modo "class" do dark mode do Tailwind v4: as classes dark:algo só
+   entram em ação quando o elemento (ou um ancestral) tem a classe "dark" —
+   é essa classe que o hook useTema.ts liga/desliga no <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-accent: #4338ca;
+  --color-accent-light: #eef1ff;
+
+  /* Tons escuros mais suaves (o padrão do Tailwind é quase preto).
+     gray-900 = fundo dos cartões/tabelas no modo escuro; gray-800 = bordas. */
+  --color-gray-900: #1e2430;
+  --color-gray-800: #313849;
+}
+
+/* Profundidade suave dos cartões: duas sombras bem leves (uma curta, uma
+   difusa) no claro; no escuro, um brilho fino no topo + sombra escura. */
+@utility card-depth {
+  box-shadow:
+    0 1px 2px rgb(16 24 40 / 0.05),
+    0 8px 20px -8px rgb(16 24 40 / 0.10);
+
+  .dark & {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.04),
+      0 10px 24px -10px rgb(0 0 0 / 0.55);
+  }
+}
+
+/* Para cartões clicáveis/destacáveis: sobe um pouquinho ao passar o mouse. */
+@utility card-depth-hover {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 2px 4px rgb(16 24 40 / 0.06),
+      0 14px 28px -10px rgb(16 24 40 / 0.16);
+  }
+
+  .dark &:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      0 16px 30px -10px rgb(0 0 0 / 0.65);
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #f9fafb;
+}
+
+.dark body {
+  background: #171b24;
+}

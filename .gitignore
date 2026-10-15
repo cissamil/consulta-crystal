@@ -1,0 +1,15 @@
+# Gerado pelo build (nao versionar)
+bin/
+obj/
+.vs/
+*.user
+
+# Gerado pelo publicar.bat
+publicado/
+ConsultaRPT.zip
+CrystalReportsRptApi/wwwroot/
+
+# Frontend
+node_modules/
+dist/
+.env
