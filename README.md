@@ -54,7 +54,7 @@ Navegador (React)  ──HTTP──▶  ConsultaRPT.exe (OWIN self-host)
 
 ## Como rodar
 
-**Requisitos:** Windows 64 bits e o **SAP Crystal Reports runtime 64 bits** (o SDK precisa dele para abrir os `.rpt`). Para compilar: [.NET SDK](https://dotnet.microsoft.com/download) e [Node.js](https://nodejs.org) 20 ou superior.
+**Requisitos:** Windows 64 bits e o **SAP Crystal Reports runtime 64 bits** (o SDK precisa dele para abrir os `.rpt`), disponível no [site oficial do SAP Crystal Reports](https://www.sap.com/products/data-cloud/crystal-reports.html). Para compilar: [.NET SDK](https://dotnet.microsoft.com/download) e [Node.js](https://nodejs.org) 20 ou superior.
 
 **Gerar o executável:** dê dois cliques em `publicar.bat`. Ele compila a tela e a API e gera a pasta `publicado/` e o `ConsultaRPT.zip`. Depois é só abrir `publicado/ConsultaRPT.exe`.
 
